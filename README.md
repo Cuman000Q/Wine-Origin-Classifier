@@ -57,8 +57,8 @@ get the same result on every run.
 Requires Python 3.9+.
 
 ```bash
-git clone https://github.com/Cuman000Q/wine-origin-classifier.git
-cd wine-origin-classifier
+git clone https://github.com/Cuman000Q/Wine-Origin-Classifier.git
+cd Wine-Origin-Classifier
 pip install -r requirements.txt
 python wine_classifier.py
 ```
@@ -79,5 +79,5 @@ It trains in a few seconds on a normal CPU, no GPU needed.
 ## Author
 
 Made by [Cuman000Q](https://github.com/Cuman000Q). See also the
-[California Housing Price Predictor](https://github.com/Cuman000Q/california-housing-price-predictor),
+[California Housing Price Predictor](https://github.com/Cuman000Q/California-House-Price-Predictor),
 the regression counterpart of this project.
