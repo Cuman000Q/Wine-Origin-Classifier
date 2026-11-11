@@ -6,7 +6,8 @@ import torch
 import torch.nn as nn
 import torch.optim
 from torch.utils.data import TensorDataset, DataLoader
-import optim
+
+torch.manual_seed(42) # fixed seed, so every run gives the same result
 
 # First we are preparing and preprocessing data for train and test subjects
 
@@ -44,12 +45,12 @@ test_loader=DataLoader(test_dataset, batch_size=32, shuffle=False)
 # we can be sure our training and test loader works fine
 
 print("DataLoader: ")
-print(f"Batch size of training set: {len(train_loader)}")
-print(f"Batch size of test set: {len(test_loader)}")
+print(f"Number of batches in training set: {len(train_loader)}")
+print(f"Number of batches in test set: {len(test_loader)}")
 
 for Batch_X, Batch_Y in train_loader:
-    print(f"\nFirst Batch X Shape: {Batch_X.shape}") # [32, 30] -> 32 patients, 30 features
-    print(f"First Batch y Shape: {Batch_Y.shape}") # [32, 1]  -> 32 labels
+    print(f"\nFirst Batch X Shape: {Batch_X.shape}") # [32, 13] -> 32 wines, 13 chemical features
+    print(f"First Batch y Shape: {Batch_Y.shape}") # [32]     -> 32 labels (cultivar 0, 1 or 2)
     break
 
 
@@ -60,11 +61,11 @@ class Wine_Classifier(nn.Module):
         super(Wine_Classifier, self).__init__()
 
         self.neural_net=nn.Sequential(
-            nn.Linear(input_dim, 30), # input dim to 13 hidden neurons of layer_1
+            nn.Linear(input_dim, 30), # 13 input features to 30 hidden neurons of layer_1
             nn.ReLU(), # activation function
             nn.Linear(30, 15), # from 30 neurons process to layer 2 15 neurons 
             nn.ReLU(), # activation fucntion
-            nn.Linear(15, num_class) # the output layer is 1 neuron
+            nn.Linear(15, num_class) # the output layer has 3 neurons, one score per class
         )
 
     def forward(self, x):
@@ -105,7 +106,7 @@ all_targets=[]
 
 with torch.no_grad():
     for batch_X, batch_Y in test_loader:
-        logits= wine_model(batch_X) # what is it???
+        logits= wine_model(batch_X) # logits = raw, unnormalised scores for each of the 3 classes
         # Select the class index (0, 1, or 2) with highest predicted score
         preds = torch.argmax(logits, dim=1)
         
@@ -116,4 +117,4 @@ print("\n" + "=" * 40)
 print(f"=== TEST ACCURACY: {accuracy_score(all_targets, all_preds) * 100:.2f}% ===")
 print("=" * 40)
 print("\nClassification Report:")
-print(classification_report(all_targets, all_preds, target_names=['Class 0', 'Class 1', 'Class 2']))
+print(classification_report(all_targets, all_preds, target_names=['Cultivar 0', 'Cultivar 1', 'Cultivar 2']))
